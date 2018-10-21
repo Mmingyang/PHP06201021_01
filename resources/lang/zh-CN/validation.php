@@ -111,6 +111,7 @@ return [
     'unique'               => ':attribute 已经存在。',
     'uploaded'             => ':attribute 上传失败。',
     'url'                  => ':attribute 格式不正确。',
+    'captcha'                  => ':attribute 不正确。',
 
     /*
     |--------------------------------------------------------------------------
@@ -172,5 +173,11 @@ return [
         'size'                  => '大小',
         'author'                => '作者',
         'fenleis_id'            => '分类',
+        'categy_id'             => '分类',
+        'imgs'                  => '图片',
+        'money'                 => '金额',
+        'xq'                    => '详情',
+        'is_on_sale'            => '上架',
+        'captcha'               => '验证码',
     ],
 ];

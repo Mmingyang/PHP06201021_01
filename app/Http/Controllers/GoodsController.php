@@ -11,18 +11,23 @@ use function Sodium\compare;
 class GoodsController extends Controller
 {
     //
-    public function index()
+    public function index(Request $request)
     {
-//        $goods=Goods::all();
-//
-//        return view("goods.index",compact("goods"));
 
-        $rows=DB::table("goods")
-            ->join("fenleis","fenleis.id","=","goods.categy_id")
-            ->select("goods.*","fenleis.fenleiN")
-            ->get();
+        $rows=Fenlei::all();
 
-        return view("goods/index",compact("rows"));
+        //接收
+        $categyId=$request->get("categy_id");
+
+        $query=Goods::orderBy("id");
+
+        if ($categyId!==null){
+            $query->where("categy_id",$categyId);
+        }
+
+        $goods=$query->paginate(2);
+
+        return view("goods/index",compact("rows","goods"));
 
     }
 
@@ -31,7 +36,23 @@ class GoodsController extends Controller
     {
         if($request->isMethod("post")){
 
+
+            $this->validate($request,[
+                "name"=>"required",
+                "categy_id"=>"required",
+                "imgs"=>"required",
+                "money"=>"required",
+                "xq"=>"required",
+                "is_on_sale"=>"required",
+                "captcha"=>"required|captcha",
+            ]);
+
             $data=$request->post();
+
+            $file = $request->file("imgs");
+
+
+            $data['imgs']=$file->store("images","image");
 
             if(Goods::create($data)){
 
@@ -57,8 +78,11 @@ class GoodsController extends Controller
 
             $data=$request->post();
 
-            if($goods->update($data)){
+            $file=$request->file("imgs");
 
+            $data['imgs']=$file->store("images","image");
+
+            if($goods->update($data)){
                 session()->flash("success","编辑成功");
                 return redirect("goods/index");
 
